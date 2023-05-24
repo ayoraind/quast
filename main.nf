@@ -21,7 +21,7 @@ final_params = check_params(merged_params)
 pipeline_start_message(version, final_params)
 
 // include processes
-include { QUAST; QUAST_SUMMARY } from './modules/processes.nf' addParams(final_params)
+include { QUAST; QUAST_SUMMARY; QUAST_MULTIQC } from './modules/processes.nf' addParams(final_params)
 
 workflow {
 
@@ -34,6 +34,8 @@ workflow {
          collected_quaststatistics_ch = QUAST.out.quast_transposed_report_ch.collect( sort: {a, b -> a[0].getBaseName() <=> b[0].getBaseName()} )
 
          QUAST_SUMMARY(collected_quaststatistics_ch, final_params.sequencing_date)
+	 
+	 QUAST_MULTIQC(QUAST.out.quast_dir_ch.collect())
 
 }
 

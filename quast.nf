@@ -62,6 +62,28 @@ process QUAST_SUMMARY {
     """
 }
 
+// QUAST MultiQC
+process QUAST_MULTIQC {
+  tag { 'multiqc for quast' }
+  memory { 4.GB * task.attempt }
+
+  publishDir "${params.output_dir}/quality_reports",
+    mode: 'copy',
+    pattern: "multiqc_report.html",
+    saveAs: { "quast_multiqc_report.html" }
+
+  input:
+  path(quast_files) 
+
+  output:
+  path("multiqc_report.html")
+
+  script:
+  """
+  multiqc --interactive .
+  """
+}
+
 workflow {
 
 	assemblies_ch = channel
@@ -75,5 +97,5 @@ workflow {
 	QUAST_SUMMARY(collected_quaststatistics_ch, params.sequencing_date)
 	
 	
-	
+	QUAST_MULTIQC(QUAST.out.quast_dir_ch.collect())
 }
