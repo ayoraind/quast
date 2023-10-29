@@ -7,6 +7,7 @@ def help_message() {
         Mandatory arguments:
          --assemblies                   must be Flye assembly (e.g., "/MIGE/01_DATA/03_ASSEMBLY/*_FLYE/T055-8-*.fasta").
          --output_dir	                Output directory
+         --sequencing_date              Sequencing date (e.g. G220902)
 
         Optional arguments:
          --help                         This usage statement.
@@ -32,7 +33,7 @@ def pipeline_start_message(String version, Map params){
     log.info "    POST-ASSEMBLY QC: TAPIR Pipeline version ${version}"
     log.info "======================================================================"
     log.info "Running version   : ${version}"
-    log.info "Fastq inputs      : ${params.reads}"
+    log.info "Fasta inputs      : ${params.assemblies}"
     log.info ""
     log.info "-------------------------- Other parameters --------------------------"
     params.sort{ it.key }.each{ k, v ->
